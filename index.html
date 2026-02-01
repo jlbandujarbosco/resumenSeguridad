@@ -2,172 +2,124 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cheatsheet Seguridad Web</title>
+    <title>Entrenador de Seguridad Web</title>
     <style>
         :root {
-            --bg: #f0f2f5;
-            --card-bg: #ffffff;
-            --primary: #2c3e50;
-            --accent: #3498db;
-            --text: #333;
+            --bg: #1a1a2e;
+            --card-bg: #16213e;
+            --primary: #4ecca3;
+            --text: #e94560;
+            --white: #ffffff;
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
-        .container { max-width: 1100px; margin: auto; }
-        header { text-align: center; margin-bottom: 30px; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--white); padding: 20px; text-align: center; }
+        .container { max-width: 900px; margin: auto; }
         
-        .search-box { width: 100%; padding: 15px; border-radius: 25px; border: 1px solid #ddd; margin-bottom: 20px; font-size: 1rem; }
+        .score-board { background: var(--card-bg); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--primary); }
         
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         
         .card { 
-            background: var(--card-bg); border-radius: 12px; padding: 20px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s;
-            border-top: 5px solid var(--accent);
+            background: var(--card-bg); border-radius: 15px; padding: 25px; 
+            min-height: 200px; display: flex; flex-direction: column; justify-content: center;
+            cursor: pointer; transition: 0.4s; border: 2px solid transparent;
+            position: relative; overflow: hidden;
         }
-        .card:hover { transform: translateY(-5px); }
         
-        h2 { color: var(--primary); font-size: 1.2rem; margin-top: 0; }
-        .tag { font-size: 0.7rem; background: #e1f5fe; color: #01579b; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; font-weight: bold; }
+        .card.hidden h2 { filter: blur(5px); opacity: 0.3; }
+        .card.hidden .content { display: none; }
         
-        .content { margin-top: 15px; }
-        .section-title { font-weight: bold; font-size: 0.9rem; color: #555; margin-top: 10px; display: block; }
+        .card.revealed { border-color: var(--primary); }
+        .card.revealed h2 { filter: blur(0); opacity: 1; color: var(--primary); }
         
-        .pros-cons { display: flex; gap: 10px; margin-top: 10px; font-size: 0.85rem; }
-        .pros { color: #27ae60; flex: 1; }
-        .cons { color: #c0392b; flex: 1; }
+        .content { margin-top: 15px; font-size: 0.9rem; text-align: left; animation: fadeIn 0.5s; }
         
-        ul { padding-left: 18px; margin: 5px 0; }
+        .actions { display: none; margin-top: 20px; gap: 10px; justify-content: center; }
+        .card.revealed .actions { display: flex; }
+
+        button { 
+            padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; 
+            font-weight: bold; transition: 0.2s;
+        }
+        .btn-know { background: #27ae60; color: white; }
+        .btn-not-know { background: #c0392b; color: white; }
+        .btn-reset { background: var(--text); color: white; margin-top: 20px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .status-tag { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>Conceptos Clave: Seguridad Web</h1>
-        <p>Resumen teórico dinámico para la Unidad Didáctica</p>
-    </header>
+    <h1>Flashcards: Seguridad Web</h1>
+    <p>Haz clic en una tarjeta para revelar el concepto. ¿Lo sabías?</p>
 
-    <input type="text" class="search-box" id="search" placeholder="Buscar concepto (ej. Asimétrico, X.509, Handshake...)" onkeyup="filter()">
-
-    <div class="grid" id="grid">
-        <div class="card">
-            <span class="tag">Fundamentos</span>
-            <h2>Algoritmos Públicos</h2>
-            <div class="content">
-                <p>La seguridad no reside en ocultar cómo funciona el algoritmo, sino en el secreto de la <b>llave</b>.</p>
-                <span class="section-title">¿Por qué son públicos?</span>
-                <ul>
-                    <li>Permiten auditoría constante de expertos.</li>
-                    <li>Cumplen el Principio de Kerckhoffs.</li>
-                    <li>Garantizan que no hay "puertas traseras".</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="tag">Cifrado</span>
-            <h2>Cifrado Simétrico</h2>
-            <div class="content">
-                <p>Utiliza una única llave compartida para cifrar y descifrar la información.</p>
-                <div class="pros-cons">
-                    <div class="pros"><b>Ventajas:</b> Muy rápido, eficiente para archivos grandes.</div>
-                    <div class="cons"><b>Contras:</b> El intercambio de la llave es inseguro.</div>
-                </div>
-                <p><small>Ejemplos: <b>AES, ChaCha20, 3DES</b></small></p>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="tag">Cifrado</span>
-            <h2>Cifrado Asimétrico</h2>
-            <div class="content">
-                <p>Usa un par de llaves vinculadas matemáticamente: una Pública y una Privada.</p>
-                <div class="pros-cons">
-                    <div class="pros"><b>Ventajas:</b> Envío seguro de llaves, permite firmas.</div>
-                    <div class="cons"><b>Contras:</b> Lento y costoso computacionalmente.</div>
-                </div>
-                <p><small>Ejemplos: <b>RSA, ECC (Curva Elíptica)</b></small></p>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="tag">Integridad</span>
-            <h2>Algoritmos de Hash</h2>
-            <div class="content">
-                <p>Generan una huella única de tamaño fijo. Son <b>unidireccionales</b> (no se pueden descifrar).</p>
-                <span class="section-title">Uso principal:</span>
-                <p>Verificar que los datos no han sido alterados durante la transmisión.</p>
-                <p><small>Ejemplos: <b>SHA-256, SHA-3</b></small></p>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="tag">Identidad</span>
-            <h2>Firma Digital</h2>
-            <div class="content">
-                <p>Es un Hash cifrado con la llave privada del emisor.</p>
-                <span class="section-title">Garantiza:</span>
-                <ul>
-                    <li><b>Autenticidad:</b> Quién lo envió.</li>
-                    <li><b>Integridad:</b> No ha cambiado.</li>
-                    <li><b>No repudio:</b> El emisor no puede negarlo.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="tag">Confianza</span>
-            <h2>Certificado X.509</h2>
-            <div class="content">
-                <p>El estándar que define el formato de los certificados digitales.</p>
-                <span class="section-title">Contiene:</span>
-                <p>Nombre del titular, Clave pública, Fecha de caducidad y Firma de la Autoridad (CA).</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="tag">Jerarquía</span>
-            <h2>Certificados Raíz</h2>
-            <div class="content">
-                <p>Certificados de máxima confianza instalados en el navegador/sistema.</p>
-                <p>Si la "raíz" es confiable, todos los certificados firmados por ella también lo son (Cadena de Confianza).</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="tag">Protocolo</span>
-            <h2>SSL / TLS</h2>
-            <div class="content">
-                <p>Protocolos de seguridad que cifran la comunicación entre cliente y servidor.</p>
-                <p><b>TLS</b> es el sucesor moderno y seguro de <b>SSL</b>. HTTPS es simplemente HTTP sobre TLS.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="tag">Proceso</span>
-            <h2>Pasos Conexión HTTPS</h2>
-            <div class="content">
-                <ol>
-                    <li><b>Client Hello:</b> El navegador inicia la conexión.</li>
-                    <li><b>Server Hello:</b> El servidor envía su certificado.</li>
-                    <li><b>Validación:</b> El navegador verifica el certificado con sus raíces.</li>
-                    <li><b>Intercambio:</b> Usan cifrado asimétrico para acordar una llave simétrica.</li>
-                    <li><b>Sesión:</b> Empiezan a hablar rápido con la llave simétrica.</li>
-                </ol>
-            </div>
-        </div>
+    <div class="score-board">
+        Conceptos dominados: <span id="count">0</span> / 9
     </div>
+
+    <div class="grid" id="gameGrid"></div>
+
+    <button class="btn-reset" onclick="resetGame()">Reiniciar Repaso</button>
 </div>
 
 <script>
-    function filter() {
-        let input = document.getElementById('search').value.toLowerCase();
-        let cards = document.getElementsByClassName('card');
-        for (let card of cards) {
-            let text = card.innerText.toLowerCase();
-            card.style.display = text.includes(input) ? "" : "none";
-        }
+    const data = [
+        { t: "Algoritmos Públicos", d: "Seguridad basada en el secreto de la llave, no del método (Kerckhoffs). Permite que expertos busquen fallos." },
+        { t: "Cifrado Simétrico", d: "Una sola llave para todo. Rápido y eficiente. Ej: AES. El reto es cómo enviar la llave." },
+        { t: "Cifrado Asimétrico", d: "Par de llaves (Pública/Privada). Lo que una cifra, la otra descifra. Ej: RSA/ECC. Resuelve el intercambio de llaves." },
+        { t: "Algoritmos de Hash", d: "Huellas digitales únicas y unidireccionales de un archivo. Si cambia el archivo, cambia el hash. Ej: SHA-256." },
+        { t: "Firma Digital", d: "Hash cifrado con llave privada. Garantiza que el mensaje es auténtico y no ha sido alterado." },
+        { t: "Formato X.509", d: "Estándar internacional que define qué datos lleva un certificado (titular, CA, clave pública, etc.)." },
+        { t: "Certificados Raíz", d: "Certificados de autoridades máximas preinstalados en el PC. Son la base de la cadena de confianza." },
+        { t: "SSL / TLS", d: "Protocolos que crean el túnel seguro. TLS es el actual. HTTPS usa TLS para proteger los datos de la web." },
+        { t: "Handshake HTTPS", d: "Negociación: Hello -> Envío Certificado -> Validación -> Acuerdo de llave simétrica -> Sesión segura." }
+    ];
+
+    let mastered = new Set();
+
+    function render() {
+        const grid = document.getElementById('gameGrid');
+        grid.innerHTML = data.map((item, i) => `
+            <div class="card ${mastered.has(i) ? 'revealed' : 'hidden'}" id="card-${i}" onclick="reveal(${i})">
+                <div class="status-tag">${mastered.has(i) ? '✅ APRENDIDO' : '❓ OCULTO'}</div>
+                <h2>${item.t}</h2>
+                <div class="content">
+                    ${item.d}
+                    <div class="actions">
+                        <button class="btn-know" onclick="mark(${i}, true; event)">Lo sabía</button>
+                        <button class="btn-not-know" onclick="mark(${i}, false; event)">No lo sabía</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        document.getElementById('count').innerText = mastered.size;
     }
+
+    window.reveal = function(i) {
+        document.getElementById(`card-${i}`).classList.remove('hidden');
+        document.getElementById(`card-${i}`).classList.add('revealed');
+    }
+
+    window.mark = function(i, knows, event) {
+        event.stopPropagation();
+        if(knows) {
+            mastered.add(i);
+        } else {
+            mastered.delete(i);
+            document.getElementById(`card-${i}`).classList.add('hidden');
+            document.getElementById(`card-${i}`).classList.remove('revealed');
+        }
+        render();
+    }
+
+    window.resetGame = function() {
+        mastered.clear();
+        render();
+    }
+
+    render();
 </script>
 
 </body>
