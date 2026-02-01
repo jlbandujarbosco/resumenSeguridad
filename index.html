@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cheatsheet Seguridad Web</title>
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --text: #333;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 1100px; margin: auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        
+        .search-box { width: 100%; padding: 15px; border-radius: 25px; border: 1px solid #ddd; margin-bottom: 20px; font-size: 1rem; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        
+        .card { 
+            background: var(--card-bg); border-radius: 12px; padding: 20px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s;
+            border-top: 5px solid var(--accent);
+        }
+        .card:hover { transform: translateY(-5px); }
+        
+        h2 { color: var(--primary); font-size: 1.2rem; margin-top: 0; }
+        .tag { font-size: 0.7rem; background: #e1f5fe; color: #01579b; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; font-weight: bold; }
+        
+        .content { margin-top: 15px; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #555; margin-top: 10px; display: block; }
+        
+        .pros-cons { display: flex; gap: 10px; margin-top: 10px; font-size: 0.85rem; }
+        .pros { color: #27ae60; flex: 1; }
+        .cons { color: #c0392b; flex: 1; }
+        
+        ul { padding-left: 18px; margin: 5px 0; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Conceptos Clave: Seguridad Web</h1>
+        <p>Resumen teórico dinámico para la Unidad Didáctica</p>
+    </header>
+
+    <input type="text" class="search-box" id="search" placeholder="Buscar concepto (ej. Asimétrico, X.509, Handshake...)" onkeyup="filter()">
+
+    <div class="grid" id="grid">
+        <div class="card">
+            <span class="tag">Fundamentos</span>
+            <h2>Algoritmos Públicos</h2>
+            <div class="content">
+                <p>La seguridad no reside en ocultar cómo funciona el algoritmo, sino en el secreto de la <b>llave</b>.</p>
+                <span class="section-title">¿Por qué son públicos?</span>
+                <ul>
+                    <li>Permiten auditoría constante de expertos.</li>
+                    <li>Cumplen el Principio de Kerckhoffs.</li>
+                    <li>Garantizan que no hay "puertas traseras".</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="tag">Cifrado</span>
+            <h2>Cifrado Simétrico</h2>
+            <div class="content">
+                <p>Utiliza una única llave compartida para cifrar y descifrar la información.</p>
+                <div class="pros-cons">
+                    <div class="pros"><b>Ventajas:</b> Muy rápido, eficiente para archivos grandes.</div>
+                    <div class="cons"><b>Contras:</b> El intercambio de la llave es inseguro.</div>
+                </div>
+                <p><small>Ejemplos: <b>AES, ChaCha20, 3DES</b></small></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="tag">Cifrado</span>
+            <h2>Cifrado Asimétrico</h2>
+            <div class="content">
+                <p>Usa un par de llaves vinculadas matemáticamente: una Pública y una Privada.</p>
+                <div class="pros-cons">
+                    <div class="pros"><b>Ventajas:</b> Envío seguro de llaves, permite firmas.</div>
+                    <div class="cons"><b>Contras:</b> Lento y costoso computacionalmente.</div>
+                </div>
+                <p><small>Ejemplos: <b>RSA, ECC (Curva Elíptica)</b></small></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="tag">Integridad</span>
+            <h2>Algoritmos de Hash</h2>
+            <div class="content">
+                <p>Generan una huella única de tamaño fijo. Son <b>unidireccionales</b> (no se pueden descifrar).</p>
+                <span class="section-title">Uso principal:</span>
+                <p>Verificar que los datos no han sido alterados durante la transmisión.</p>
+                <p><small>Ejemplos: <b>SHA-256, SHA-3</b></small></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="tag">Identidad</span>
+            <h2>Firma Digital</h2>
+            <div class="content">
+                <p>Es un Hash cifrado con la llave privada del emisor.</p>
+                <span class="section-title">Garantiza:</span>
+                <ul>
+                    <li><b>Autenticidad:</b> Quién lo envió.</li>
+                    <li><b>Integridad:</b> No ha cambiado.</li>
+                    <li><b>No repudio:</b> El emisor no puede negarlo.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="tag">Confianza</span>
+            <h2>Certificado X.509</h2>
+            <div class="content">
+                <p>El estándar que define el formato de los certificados digitales.</p>
+                <span class="section-title">Contiene:</span>
+                <p>Nombre del titular, Clave pública, Fecha de caducidad y Firma de la Autoridad (CA).</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="tag">Jerarquía</span>
+            <h2>Certificados Raíz</h2>
+            <div class="content">
+                <p>Certificados de máxima confianza instalados en el navegador/sistema.</p>
+                <p>Si la "raíz" es confiable, todos los certificados firmados por ella también lo son (Cadena de Confianza).</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="tag">Protocolo</span>
+            <h2>SSL / TLS</h2>
+            <div class="content">
+                <p>Protocolos de seguridad que cifran la comunicación entre cliente y servidor.</p>
+                <p><b>TLS</b> es el sucesor moderno y seguro de <b>SSL</b>. HTTPS es simplemente HTTP sobre TLS.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="tag">Proceso</span>
+            <h2>Pasos Conexión HTTPS</h2>
+            <div class="content">
+                <ol>
+                    <li><b>Client Hello:</b> El navegador inicia la conexión.</li>
+                    <li><b>Server Hello:</b> El servidor envía su certificado.</li>
+                    <li><b>Validación:</b> El navegador verifica el certificado con sus raíces.</li>
+                    <li><b>Intercambio:</b> Usan cifrado asimétrico para acordar una llave simétrica.</li>
+                    <li><b>Sesión:</b> Empiezan a hablar rápido con la llave simétrica.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filter() {
+        let input = document.getElementById('search').value.toLowerCase();
+        let cards = document.getElementsByClassName('card');
+        for (let card of cards) {
+            let text = card.innerText.toLowerCase();
+            card.style.display = text.includes(input) ? "" : "none";
+        }
+    }
+</script>
+
+</body>
+</html>
